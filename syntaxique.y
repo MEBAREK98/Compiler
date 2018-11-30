@@ -128,7 +128,10 @@ INS : id IN
 	 ;*/
 /*TABi : id cro id crf
 ; */
-OPP: OPP plus OPER  {sprintf(tmp,"%s%d","",$1.val);
+OPP: OPP plus OPER  {
+									
+									
+									sprintf(tmp,"%s%d","",$1.val);
 								  sprintf(tmp3,"%s%d","",$3.val);
 								  if(nb_res_maxp==0){
 								  if(nb_res_max==0){
@@ -140,17 +143,20 @@ OPP: OPP plus OPER  {sprintf(tmp,"%s%d","",$1.val);
 									
 									  sprintf(tmp4,"%s%d","",res[nb_res_max]);
 								  
-								  
+										//printf("je suis la %d",res[nb_res_max]);
 								      quadr("+",tmp,tmp3,tmp4);
 									  
 								  }else{
 									  
 									  sprintf(tmp5,"%s%d","",res[nb_res_max]);
+									  nb_res_max--;
 									  r=operation(tmp5,tmp3,"+");
 									  nb_res_max++;
 									  res[nb_res_max]=r;
 									  
 									  sprintf(tmp4,"%s%d","",res[nb_res_max]);
+									  
+									  //printf("je suis la %d",res[nb_res_max]);
 									  
 									  quadr("+",tmp5,tmp3,tmp4);
 									  
@@ -158,10 +164,27 @@ OPP: OPP plus OPER  {sprintf(tmp,"%s%d","",$1.val);
 								  }}else{
 									  
 									  
-									if(nb_res_max!=0){
+									//if(nb_res_max!=0){
 									  sprintf(tmp5,"%s%d","",resp[nb_res_maxp]);
-									  sprintf(tmp3,"%s%d","",res[nb_res_max]);
+									  //sprintf(tmp3,"%s%d","",res[nb_res_max]);
+									  nb_res_maxp--;
 									  r=operation(tmp5,tmp3,"+");
+									  
+									  nb_res_max++;
+									  res[nb_res_max]=r;
+									  
+									  sprintf(tmp4,"%s%d","",res[nb_res_max]);
+									  printf("je suis la %s",tmp4);
+									  
+									  quadr("+",tmp5,tmp3,tmp4);
+									  
+									  /*
+									}
+									else{
+										sprintf(tmp5,"%s%d","",resp[nb_res_maxp]);
+									  //sprintf(tmp3,"%s%d","",res[nb_res_max]);
+									  r=operation(tmp5,tmp3,"+");
+									  printf("laaaaaaaaa");
 									  
 									  nb_res_max++;
 									  resp[nb_res_maxp]=r;
@@ -169,9 +192,12 @@ OPP: OPP plus OPER  {sprintf(tmp,"%s%d","",$1.val);
 									  sprintf(tmp4,"%s%d","",resp[nb_res_maxp]);
 									  
 									  quadr("+",tmp5,tmp3,tmp4);
-									  
-									  
-									}}
+										
+										
+									}*/
+									
+									
+									}
 									  
 									  
 									  
@@ -189,6 +215,7 @@ OPP: OPP plus OPER  {sprintf(tmp,"%s%d","",$1.val);
 									  nb_res_max++;
 									
 									  res[nb_res_max]=r;
+									 // printf("\n\t%d",r);
 									
 									  sprintf(tmp4,"%s%d","",res[nb_res_max]);
 								  
@@ -201,6 +228,7 @@ OPP: OPP plus OPER  {sprintf(tmp,"%s%d","",$1.val);
 									  r=operation(tmp5,tmp3,"-");
 									  nb_res_max++;
 									  res[nb_res_max]=r;
+									//  printf("\n\t%d",r);
 									  
 									  sprintf(tmp4,"%s%d","",res[nb_res_max]);
 									  
@@ -213,28 +241,35 @@ OPP: OPP plus OPER  {sprintf(tmp,"%s%d","",$1.val);
 									if(nb_res_max!=0){
 									  sprintf(tmp5,"%s%d","",resp[nb_res_maxp]);
 									  sprintf(tmp3,"%s%d","",res[nb_res_max]);
-									  r=operation(tmp5,tmp3,"-");
-									  
+									  r=operation(tmp3,tmp5,"-");
+									 // printf("\n\t%d",r);
 									  nb_res_max++;
 									  resp[nb_res_maxp]=r;
 									  
 									  sprintf(tmp4,"%s%d","",resp[nb_res_maxp]);
 									  
-									  quadr("-",tmp5,tmp3,tmp4);
+									  quadr("-",tmp3,tmp5,tmp4);
 									  
 									  
 									}}
 								   
 								  
-								  
 								  }
+								  
 	| OPER
 ;
-OPER: OPER fois FLT {sprintf(tmp,"%s%d","",$1.val);
+OPER: OPER fois FLT {
+	
+									
+								  sprintf(tmp,"%s%d","",$1.val);
 								  sprintf(tmp3,"%s%d","",$3.val);
-								  //if(nb_res_maxp==0){
+								  
+								  
+								  
 								  if(nb_res_maxp==0){
 									  
+									  
+									  //if(nb_res_max!=0){
 									  r=operation(tmp,tmp3,"*");
 									  
 									  nb_res_maxp++;
@@ -261,11 +296,16 @@ OPER: OPER fois FLT {sprintf(tmp,"%s%d","",$1.val);
 								  
 								  
 								  }
-	| OPER diiv FLT {sprintf(tmp,"%s%d","",$1.val);
+	| OPER diiv FLT {
+								  sprintf(tmp,"%s%d","",$1.val);
 								  sprintf(tmp3,"%s%d","",$3.val);
-								  //if(nb_res_maxp==0){
+								  
+								  
+								  
 								  if(nb_res_maxp==0){
 									  
+									  
+									  //if(nb_res_max!=0){
 									  r=operation(tmp,tmp3,"/");
 									  
 									  nb_res_maxp++;
@@ -280,6 +320,7 @@ OPER: OPER fois FLT {sprintf(tmp,"%s%d","",$1.val);
 								 }else{
 									  
 									  sprintf(tmp5,"%s%d","",resp[nb_res_maxp]);
+									  nb_res_maxp--;
 									  r=operation(tmp5,tmp3,"/");
 									  nb_res_maxp++;
 									  resp[nb_res_maxp]=r;
@@ -289,7 +330,7 @@ OPER: OPER fois FLT {sprintf(tmp,"%s%d","",$1.val);
 									  
 									  
 								  }
-								   
+								  
 								  
 								  
 								  }
