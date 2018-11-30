@@ -1,0 +1,8 @@
+#TAB
+#CALCUL
+#BOUCLE
+PROGRAMME SII
+{
+REEL :: S|| R;  
+S:=2+2-2+78/9*4;
+}
