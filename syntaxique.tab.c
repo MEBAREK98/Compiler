@@ -74,6 +74,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+typedef struct qdr qdr;
+struct qdr{
+
+    char oper[100]; 
+    char op1[100];   
+    char op2[100];   
+    char res[100];  
+    qdr *svt;
+  };
+  
+
 extern int cpt;
 int nbligne=0;
 int nbcolonne;
@@ -84,20 +96,8 @@ int r;
 int res [20],resp[20];
 char tmp[20],tmp3[20],tmp4[20],tmp5[20];
 char* tmp1,tmp2;
+qdr *tete;
 
-
-typedef struct list list;
-struct list{
-	int nombre;
-	list *suivant;
-};
-
-typedef struct Pile Pile;
-struct Pile
-{
-    list *premier;
-};
-//Pile pile_res=initialiser_pile();
 
 
 
@@ -494,8 +494,8 @@ static const yytype_uint16 yyrline[] =
 {
        0,    49,    49,    51,    52,    53,    54,    56,    57,    59,
       60,    61,    65,    66,    68,    69,    71,    72,    74,    75,
-      78,    79,    81,    83,    84,   106,   107,   131,   183,   231,
-     233,   264,   296,   305,   311,   314
+      78,    79,    81,    83,    84,   106,   107,   131,   209,   259,
+     261,   299,   337,   346,   352,   355
 };
 #endif
 
@@ -1448,11 +1448,21 @@ yyreduce:
     { sprintf(tmp,"%s%d","",(yyvsp[(1) - (1)].num));printf("\n%s",tmp);;}
     break;
 
+  case 25:
+
+/* Line 1455 of yacc.c  */
+#line 106 "syntaxique.y"
+    {quadr(":=",tete->res,"",(yyvsp[(1) - (3)].str));}
+    break;
+
   case 27:
 
 /* Line 1455 of yacc.c  */
 #line 131 "syntaxique.y"
-    {sprintf(tmp,"%s%d","",(yyvsp[(1) - (3)].s).val);
+    {
+									
+									
+									sprintf(tmp,"%s%d","",(yyvsp[(1) - (3)].s).val);
 								  sprintf(tmp3,"%s%d","",(yyvsp[(3) - (3)].s).val);
 								  if(nb_res_maxp==0){
 								  if(nb_res_max==0){
@@ -1464,17 +1474,20 @@ yyreduce:
 									
 									  sprintf(tmp4,"%s%d","",res[nb_res_max]);
 								  
-								  
+										//printf("je suis la %d",res[nb_res_max]);
 								      quadr("+",tmp,tmp3,tmp4);
 									  
 								  }else{
 									  
 									  sprintf(tmp5,"%s%d","",res[nb_res_max]);
+									  nb_res_max--;
 									  r=operation(tmp5,tmp3,"+");
 									  nb_res_max++;
 									  res[nb_res_max]=r;
 									  
 									  sprintf(tmp4,"%s%d","",res[nb_res_max]);
+									  
+									  //printf("je suis la %d",res[nb_res_max]);
 									  
 									  quadr("+",tmp5,tmp3,tmp4);
 									  
@@ -1482,10 +1495,27 @@ yyreduce:
 								  }}else{
 									  
 									  
-									if(nb_res_max!=0){
+									//if(nb_res_max!=0){
 									  sprintf(tmp5,"%s%d","",resp[nb_res_maxp]);
-									  sprintf(tmp3,"%s%d","",res[nb_res_max]);
+									  //sprintf(tmp3,"%s%d","",res[nb_res_max]);
+									  nb_res_maxp--;
 									  r=operation(tmp5,tmp3,"+");
+									  
+									  nb_res_max++;
+									  res[nb_res_max]=r;
+									  
+									  sprintf(tmp4,"%s%d","",res[nb_res_max]);
+									  printf("je suis la %s",tmp4);
+									  
+									  quadr("+",tmp5,tmp3,tmp4);
+									  
+									  /*
+									}
+									else{
+										sprintf(tmp5,"%s%d","",resp[nb_res_maxp]);
+									  //sprintf(tmp3,"%s%d","",res[nb_res_max]);
+									  r=operation(tmp5,tmp3,"+");
+									  printf("laaaaaaaaa");
 									  
 									  nb_res_max++;
 									  resp[nb_res_maxp]=r;
@@ -1493,9 +1523,12 @@ yyreduce:
 									  sprintf(tmp4,"%s%d","",resp[nb_res_maxp]);
 									  
 									  quadr("+",tmp5,tmp3,tmp4);
-									  
-									  
-									}}
+										
+										
+									}*/
+									
+									
+									}
 									  
 									  
 									  
@@ -1505,7 +1538,7 @@ yyreduce:
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 183 "syntaxique.y"
+#line 209 "syntaxique.y"
     {sprintf(tmp,"%s%d","",(yyvsp[(1) - (3)].s).val);
 								  sprintf(tmp3,"%s%d","",(yyvsp[(3) - (3)].s).val);
 								  if(nb_res_maxp==0){
@@ -1515,6 +1548,7 @@ yyreduce:
 									  nb_res_max++;
 									
 									  res[nb_res_max]=r;
+									 // printf("\n\t%d",r);
 									
 									  sprintf(tmp4,"%s%d","",res[nb_res_max]);
 								  
@@ -1527,6 +1561,7 @@ yyreduce:
 									  r=operation(tmp5,tmp3,"-");
 									  nb_res_max++;
 									  res[nb_res_max]=r;
+									//  printf("\n\t%d",r);
 									  
 									  sprintf(tmp4,"%s%d","",res[nb_res_max]);
 									  
@@ -1539,19 +1574,18 @@ yyreduce:
 									if(nb_res_max!=0){
 									  sprintf(tmp5,"%s%d","",resp[nb_res_maxp]);
 									  sprintf(tmp3,"%s%d","",res[nb_res_max]);
-									  r=operation(tmp5,tmp3,"-");
-									  
+									  r=operation(tmp3,tmp5,"-");
+									 // printf("\n\t%d",r);
 									  nb_res_max++;
 									  resp[nb_res_maxp]=r;
 									  
 									  sprintf(tmp4,"%s%d","",resp[nb_res_maxp]);
 									  
-									  quadr("-",tmp5,tmp3,tmp4);
+									  quadr("-",tmp3,tmp5,tmp4);
 									  
 									  
 									}}
 								   
-								  
 								  
 								  ;}
     break;
@@ -1559,12 +1593,19 @@ yyreduce:
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 233 "syntaxique.y"
-    {sprintf(tmp,"%s%d","",(yyvsp[(1) - (3)].s).val);
+#line 261 "syntaxique.y"
+    {
+	
+									
+								  sprintf(tmp,"%s%d","",(yyvsp[(1) - (3)].s).val);
 								  sprintf(tmp3,"%s%d","",(yyvsp[(3) - (3)].s).val);
-								  //if(nb_res_maxp==0){
+								  
+								  
+								  
 								  if(nb_res_maxp==0){
 									  
+									  
+									  //if(nb_res_max!=0){
 									  r=operation(tmp,tmp3,"*");
 									  
 									  nb_res_maxp++;
@@ -1596,12 +1637,17 @@ yyreduce:
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 264 "syntaxique.y"
-    {sprintf(tmp,"%s%d","",(yyvsp[(1) - (3)].s).val);
+#line 299 "syntaxique.y"
+    {
+								  sprintf(tmp,"%s%d","",(yyvsp[(1) - (3)].s).val);
 								  sprintf(tmp3,"%s%d","",(yyvsp[(3) - (3)].s).val);
-								  //if(nb_res_maxp==0){
+								  
+								  
+								  
 								  if(nb_res_maxp==0){
 									  
+									  
+									  //if(nb_res_max!=0){
 									  r=operation(tmp,tmp3,"/");
 									  
 									  nb_res_maxp++;
@@ -1616,6 +1662,7 @@ yyreduce:
 								 }else{
 									  
 									  sprintf(tmp5,"%s%d","",resp[nb_res_maxp]);
+									  nb_res_maxp--;
 									  r=operation(tmp5,tmp3,"/");
 									  nb_res_maxp++;
 									  resp[nb_res_maxp]=r;
@@ -1625,7 +1672,7 @@ yyreduce:
 									  
 									  
 								  }
-								   
+								  
 								  
 								  
 								  ;}
@@ -1634,7 +1681,7 @@ yyreduce:
 
 
 /* Line 1455 of yacc.c  */
-#line 1638 "syntaxique.tab.c"
+#line 1685 "syntaxique.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1846,7 +1893,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 339 "syntaxique.y"
+#line 380 "syntaxique.y"
 
 int yyerror(char*msg)
 {

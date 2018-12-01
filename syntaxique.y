@@ -3,6 +3,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+typedef struct qdr qdr;
+struct qdr{
+
+    char oper[100]; 
+    char op1[100];   
+    char op2[100];   
+    char res[100];  
+    qdr *svt;
+  };
+  
+
 extern int cpt;
 int nbligne=0;
 int nbcolonne;
@@ -13,20 +25,8 @@ int r;
 int res [20],resp[20];
 char tmp[20],tmp3[20],tmp4[20],tmp5[20];
 char* tmp1,tmp2;
+qdr *tete;
 
-
-typedef struct list list;
-struct list{
-	int nombre;
-	list *suivant;
-};
-
-typedef struct Pile Pile;
-struct Pile
-{
-    list *premier;
-};
-//Pile pile_res=initialiser_pile();
 
 %}
 %union{
@@ -43,6 +43,9 @@ struct s{
 %type<s> OPP
 %type<s> OPER
 %type<s> FLT
+%type<s> TAB
+%type<s> TABi
+%type<s> PAR
  
 %start S
 %%
@@ -103,8 +106,20 @@ INST : id affct id IN  { quadr(":=",$3,"",$1) ; }
 	 
 ;*/
 
-INST : id affct OPP  
-	 |
+INST : id affct OPP  {quadr(":=",tete->res,"",$1)}
+	 |id affct TAB {quadr(":=",$3.chaine,"",$1)}
+	 |id affct TABi {quadr(":=",$3.chaine,"",$1)}
+	 |id affct PAR {quadr(":=",$3.chaine,"",$1)}
+	 |TABi affct id {quadr(":=",$3.chaine,"",$1)}
+	 |TABi affct FLT {quadr(":=",$3.chaine,"",$1)}
+	 |TABi affct PAR {quadr(":=",$3.chaine,"",$1)}
+	 |TABi affct TABi {quadr(":=",$3.chaine,"",$1)}
+	 |TABi affct TAB {quadr(":=",$3.chaine,"",$1)}
+	 |TAB affct PAR {quadr(":=",$3.chaine,"",$1)}
+	 |TAB affct id {quadr(":=",$3.chaine,"",$1)}
+	 |TAB affct FLT {quadr(":=",$3.chaine,"",$1)}
+	 |TAB affct TABi{quadr(":=",$3.chaine,"",$1)}
+	 |TAB affct TAB {quadr(":=",$3.chaine,"",$1)}
 	 ;
 
 
@@ -112,13 +127,13 @@ INST : id affct OPP
 
 
 
-/*PAR : PAR_o INS PAR_f
+PAR : PAR_o INS PAR_f
 	 | PAR_o NBRS PAR_f
 ;
 NBRS: plus FLT
 	 | moins FLT
-
 ;
+/*
 INS : id IN
      |FLT IN 
 	 |TAB IN
@@ -126,8 +141,8 @@ INS : id IN
 	 
 	 
 	 ;*/
-/*TABi : id cro id crf
-; */
+TABi : id cro id crf
+; 
 OPP: OPP plus OPER  {
 									
 									
@@ -351,7 +366,7 @@ BOUCLE : mc_wh PAR_o COND PAR_f '{' INSTR '}';
 */
 INSTR : AFFACTATION INSTR
        //|BOUCLE INSTR
-	   //|CONDITION INSTR
+	   |CONDITION INSTR
 	   |
 	   ;
 	   /*
