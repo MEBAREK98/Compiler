@@ -16,71 +16,43 @@ typedef struct {
 TypeTS ts[100];
 
 
-
-typedef struct qdr{
+typedef struct qdr qdr;
+struct qdr{
 
     char oper[100]; 
     char op1[100];   
     char op2[100];   
     char res[100];  
-    
-  }qdr;
-
-qdr quad[1000];
+    qdr *svt;
+  };
+  
+  
+//qdr quad[1000];
 
 extern int qc;
 
-/*****************************pile_pour le resultat*********************************/
+extern qdr *tete;
 
-/*
-//depiler une pile
-int depiler(Pile *pile)
-{
-    if (pile == NULL)
-    {
-        exit(EXIT_FAILURE);
-    }
 
-    int nombreDepile = 0;
-    list *elementDepile = pile->premier;
+/***************************************pile*********************************************/
 
-    if ((pile != NULL) && (pile->premier != NULL))
-    {
-        nombreDepile = elementDepile->nombre;
-        pile->premier = elementDepile->suivant;
-        free(elementDepile);
-    }
 
-    return nombreDepile;
+
+
+qdr depiler(){
+	qdr e,*p;
+	strcpy(e.oper , tete->oper);
+	strcpy(e.op1 , tete->op1);
+	strcpy(e.op2 , tete->op2);
+	strcpy(e.res , tete->res);
+	p=tete;
+	free(p);
+	tete=tete->svt;
+	printf("%s %s %s %s \n",e.oper,e.op1,e.op2,e.res);
+	return e;
 }
 
 
-//empiler dans une pile
-
-
-void empiler(Pile *pile, int nvNombre)
-{
-    list *nouveau = malloc(sizeof(*nouveau));
-    if (pile == NULL || nouveau == NULL)
-    {
-        exit(EXIT_FAILURE);
-    }
-
-    nouveau->nombre = nvNombre;
-    nouveau->suivant = pile->premier;
-    pile->premier = nouveau;
-}
-
-
-Pile initialiser_pile(){
-	Pile *pile;
-	list *p=malloc(sizeof(*p));
-
-	*pile->premier=*p;
-	return *pile;
-}
-
-*/
 
 /****************************TS******************************/
 int recherche(char entite[]){
@@ -160,50 +132,63 @@ int operation(char op1[],char op2[],char oper[1])
 
 void quadr(char opr[],char op1[],char op2[],char res[])
 { 
+	qdr *elt=malloc(sizeof(*elt));
+	strcpy(elt->oper , opr);
+	strcpy(elt->op1 , op1);
+	strcpy(elt->op2 , op2);
+	strcpy(elt->res , res);
 	
 	
-	
-	
-	strcpy(quad[qc].oper , opr);
-	
-	
-	strcpy(quad[qc].op1 , op1);
-	
-	
-	strcpy(quad[qc].op2 , op2);
-	strcpy(quad[qc].res , res);
-	
+	if(qc==0){
+			elt->svt=NULL;
+			tete=elt;
+			
+	}else{
+		elt->svt=tete;
+		tete=elt;
+		
+	}
 	
 	qc++;
+	
+	
+	
+	
 }
 
 
 void ajour_quad(int num_quad , int colon_quad , char val[]){
 	
-	if(colon_quad==0) strcpy(quad[num_quad].oper, val);
-	else if (colon_quad==1) strcpy(quad[num_quad].op1 , val);
-		else if (colon_quad==2) strcpy(quad[num_quad].op2 , val);
-			else if(colon_quad==3) strcpy(quad[num_quad].res , val);
+	int i=num_quad;
+	qdr *p;
+	p=tete;
+	printf("%d\n",i);
+	while(i!=0){p=p->svt;i--;}
+	if(colon_quad==0) strcpy(p->oper, val);
+	else if (colon_quad==1) strcpy(p->op1 , val);
+		else if (colon_quad==2) strcpy(p->op2 , val);
+			else if(colon_quad==3) strcpy(p->res , val);
 	
 	
 }
 
 void afficher_qdr(){
-	
-	
+	qdr *p;
+	p=tete;
 printf("***********************Les Quadruplets***********************\n")	;
 int i;
 
 
-for(i=0;i<qc;i++)
+i=qc;
+while(p!=NULL)
 {
 	
 	
 	
-	printf("\n %d - ( %s  , %s  , %s  , %s )",i,quad[i].oper,quad[i].op1,quad[i].op2,quad[i].res);
+	printf("\n %d - ( %s  , %s  , %s  , %s )",i,p->oper,p->op1,p->op2,p->res);
 	printf("\n________________________________________________\n");
-	
-	
+	p=p->svt;
+	i--;
 }	
 	
 }

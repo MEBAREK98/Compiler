@@ -3,6 +3,17 @@
 #BOUCLE
 PROGRAMME SII
 {
-REEL :: S|| R;  
-S:=2+2-2+78/9*4;
+REEL :: S || R || M;
+WHILE(S==5)
+{
+S :=78+45 ;
+WHILE(S==5)
+{
+S :=2 ;
+}
+S :=2 ;
+S :=78+45 ;
+S:=78;
+}
+
 }

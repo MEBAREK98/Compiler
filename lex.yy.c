@@ -290,11 +290,11 @@ static yyconst short int yy_accept[93] =
        26,   23,   21,   22,   20,   24,   12,   34,   14,   28,
        27,   29,   11,   11,   11,   11,   11,   11,   11,   18,
        19,   34,    0,    0,    0,    0,   12,   16,   17,   11,
-       11,   11,    9,   11,   11,   11,   11,   15,    0,    0,
+       11,   11,    8,   11,   11,   11,   11,   15,    0,    0,
         0,    0,    0,   11,   11,   11,   11,   11,   11,    0,
-        0,    3,   13,   11,   11,   11,   11,    7,   11,    0,
-        0,   11,   11,   11,   11,    2,    0,    0,   11,    8,
-       11,   11,    5,    4,   11,    6,   11,   11,   11,   10,
+        0,    2,   13,   11,   11,   11,   11,    6,   11,    0,
+        0,   11,   11,   11,   11,    9,    0,    0,   11,    7,
+       11,   11,    4,    3,   11,    5,   11,   11,   11,   10,
         1,    0
 
     } ;
@@ -684,172 +684,172 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 24 "lexical.l"
-return mc_wh;
-	YY_BREAK
-case 3:
-YY_RULE_SETUP
 #line 25 "lexical.l"
 return bib_tab;
 	YY_BREAK
-case 4:
+case 3:
 YY_RULE_SETUP
 #line 26 "lexical.l"
 return bib_calcul;
 	YY_BREAK
-case 5:
+case 4:
 YY_RULE_SETUP
 #line 27 "lexical.l"
 return bib_boucle;
 	YY_BREAK
-case 6:
+case 5:
 YY_RULE_SETUP
 #line 28 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ; strcpy(type,"INETGER");return mc_integer;}
 	YY_BREAK
-case 7:
+case 6:
 YY_RULE_SETUP
 #line 29 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ; strcpy(type,"REEL");return mc_reel;}
 	YY_BREAK
-case 8:
+case 7:
 YY_RULE_SETUP
 #line 30 "lexical.l"
-{nbcolonne=nbcolonne+yyleng ;return mc_exe;}
+{nbcolonne=nbcolonne+yyleng ;yylval.str=strdup(yytext);return mc_exe;}
+	YY_BREAK
+case 8:
+YY_RULE_SETUP
+#line 31 "lexical.l"
+{nbcolonne=nbcolonne+yyleng ;yylval.str=strdup(yytext) ;return mc_if;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 31 "lexical.l"
-{nbcolonne=nbcolonne+yyleng ;return mc_if;}
+#line 33 "lexical.l"
+{nbcolonne=nbcolonne+yyleng;yylval.str =strdup(yytext);return mc_wh;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 33 "lexical.l"
+#line 35 "lexical.l"
 {nbcolonne=nbcolonne+yyleng;strcpy(constant,"oui");return mc_cst;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 34 "lexical.l"
-{nbcolonne=nbcolonne+yyleng;yylval.str =strdup(yytext);if(strcmp(type,"/")!=0){inserer(yylval.str,"idf",type,constant,1);}else if((recherche(yytext)==-1)&& (nom==0)){printf("%s non declarer\n",yytext);}if(nom ==1){inserer(yylval.str,"idf",type,"non",1);}return id;}
+#line 36 "lexical.l"
+{nbcolonne=nbcolonne+yyleng; yylval.str =strdup(yytext);if(strcmp(type,"/")!=0){inserer(yylval.str,"idf",type,constant,1);}else if((recherche(yytext)==-1)&& (nom==0)){printf("%s non declarer\n",yytext);}if(nom ==1){inserer(yylval.str,"idf",type,"non",1);}return id;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 35 "lexical.l"
+#line 37 "lexical.l"
 {nbcolonne=nbcolonne+yyleng;if(crocher_ouvrant=1){T=atoi(yytext);modifier(T);};yylval.num=atoi(yytext);return nbr;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 36 "lexical.l"
+#line 38 "lexical.l"
 
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 37 "lexical.l"
-{nbcolonne=nbcolonne+yyleng ;return yytext[0];}
+#line 39 "lexical.l"
+{nbcolonne=nbcolonne+yyleng ;yylval.str =strdup(yytext);return yytext[0];}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 38 "lexical.l"
+#line 40 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;return sp_2b;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 39 "lexical.l"
+#line 41 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;return dps;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 40 "lexical.l"
+#line 42 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;return affct;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 42 "lexical.l"
+#line 44 "lexical.l"
 {nbcolonne=nbcolonne+yyleng; crocher_ouvrant=1 ;return cro;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 43 "lexical.l"
+#line 45 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;crocher_ouvrant=0; return crf;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 45 "lexical.l"
+#line 47 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;return pt;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 46 "lexical.l"
+#line 48 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;yylval.str=strdup(yytext);return plus;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 47 "lexical.l"
+#line 49 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;yylval.str=strdup(yytext);return moins;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 48 "lexical.l"
+#line 50 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;yylval.str=strdup(yytext);return fois;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 49 "lexical.l"
+#line 51 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;yylval.str=strdup(yytext);return diiv;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 51 "lexical.l"
+#line 53 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;return PAR_o;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 52 "lexical.l"
+#line 54 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;return PAR_f;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 53 "lexical.l"
+#line 55 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;return egal;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 54 "lexical.l"
+#line 56 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;return inf;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 55 "lexical.l"
+#line 57 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;return sup;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 56 "lexical.l"
+#line 58 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;return def;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 57 "lexical.l"
+#line 59 "lexical.l"
 {nbcolonne=nbcolonne+yyleng ;return et_l;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 59 "lexical.l"
+#line 61 "lexical.l"
 {nbcolonne=nbcolonne+yyleng;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 60 "lexical.l"
+#line 62 "lexical.l"
 {nbcolonne=1;nom=0;nbligne++;strcpy(constant,"non");strcpy(type,"/");}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 62 "lexical.l"
+#line 64 "lexical.l"
 printf("Erreur lexicale à la ligne %d et la colonne %d \n", nbligne,nbcolonne);
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 63 "lexical.l"
+#line 65 "lexical.l"
 ECHO;
 	YY_BREAK
 #line 856 "lex.yy.c"
@@ -1738,7 +1738,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 63 "lexical.l"
+#line 65 "lexical.l"
 
 int yywrap()
 {return 1;}

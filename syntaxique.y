@@ -3,30 +3,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+typedef struct qdr qdr;
+struct qdr{
+
+    char oper[100]; 
+    char op1[100];   
+    char op2[100];   
+    char res[100];  
+    qdr *svt;
+  };
+  
+
 extern int cpt;
 int nbligne=0;
 int nbcolonne;
 int qc=0;
 char* s;
 int nb_res_max=0,nb_res_maxp=0;
-int r;
+int r,b;
 int res [20],resp[20];
 char tmp[20],tmp3[20],tmp4[20],tmp5[20];
 char* tmp1,tmp2;
+qdr *tete=NULL;
 
-
-typedef struct list list;
-struct list{
-	int nombre;
-	list *suivant;
-};
-
-typedef struct Pile Pile;
-struct Pile
-{
-    list *premier;
-};
-//Pile pile_res=initialiser_pile();
 
 %}
 %union{
@@ -43,6 +43,10 @@ struct s{
 %type<s> OPP
 %type<s> OPER
 %type<s> FLT
+%type<s> TAB
+%type<s> TABi
+%type<s> PAR
+%type<s> INS
  
 %start S
 %%
@@ -75,7 +79,7 @@ AFF : id affct id
       |id affct FLT  
 	  ;
 
-FLT : nbr { sprintf(tmp,"%s%d","",$1);printf("\n%s",tmp);}
+FLT : nbr { sprintf(tmp,"%s%d","",$1);}
      |nbr pt nbr	 
 ;
 TAB : id cro nbr crf
@@ -103,31 +107,41 @@ INST : id affct id IN  { quadr(":=",$3,"",$1) ; }
 	 
 ;*/
 
-INST : id affct OPP  
-	 |
+INST : id affct OPP  {if(tete!=NULL){quadr(":=",tete->res,"",$1);}}
+	 |id affct FLT {quadr(":=",tmp,"",$1);}
+	 |id affct TABi {quadr(":=",$3.chaine,"",$1);}
+	 |id affct PAR {quadr(":=",$3.chaine,"",$1);}
+	 |TABi affct id {quadr(":=",$3,"",$1.chaine);}
+	 |TABi affct PAR {quadr(":=",$3.chaine,"",$1.chaine);}
+	 |TABi affct TABi {quadr(":=",$3.chaine,"",$1.chaine);}
+	 |TABi affct TAB {quadr(":=",$3.chaine,"",$1.chaine);}
+	 |TAB affct PAR {quadr(":=",$3.chaine,"",$1.chaine);}
+	 |TAB affct id {quadr(":=",$3,"",$1.chaine);}
+	 |TAB affct TABi{quadr(":=",$3.chaine,"",$1.chaine);}
+	 |TAB affct TAB {quadr(":=",$3.chaine,"",$1.chaine);}
 	 ;
 
+ //|TABi affct FLT {quadr(":=",$3.chaine,"",$1.chaine);}
+//|TAB affct FLT {quadr(":=",$3.chaine,"",$1.chaine);}
 
 
 
-
-
-/*PAR : PAR_o INS PAR_f
+PAR : PAR_o INS PAR_f
 	 | PAR_o NBRS PAR_f
 ;
 NBRS: plus FLT
 	 | moins FLT
-
 ;
+
 INS : id IN
      |FLT IN 
 	 |TAB IN
 	 |TABi IN
 	 
 	 
-	 ;*/
-/*TABi : id cro id crf
-; */
+	 ;
+TABi : id cro id crf
+; 
 OPP: OPP plus OPER  {
 									
 									
@@ -178,23 +192,7 @@ OPP: OPP plus OPER  {
 									  
 									  quadr("+",tmp5,tmp3,tmp4);
 									  
-									  /*
-									}
-									else{
-										sprintf(tmp5,"%s%d","",resp[nb_res_maxp]);
-									  //sprintf(tmp3,"%s%d","",res[nb_res_max]);
-									  r=operation(tmp5,tmp3,"+");
-									  printf("laaaaaaaaa");
 									  
-									  nb_res_max++;
-									  resp[nb_res_maxp]=r;
-									  
-									  sprintf(tmp4,"%s%d","",resp[nb_res_maxp]);
-									  
-									  quadr("+",tmp5,tmp3,tmp4);
-										
-										
-									}*/
 									
 									
 									}
@@ -256,7 +254,7 @@ OPP: OPP plus OPER  {
 								  
 								  }
 								  
-	| OPER
+	| OPER 
 ;
 OPER: OPER fois FLT {
 	
@@ -336,25 +334,26 @@ OPER: OPER fois FLT {
 								  }
 	| FLT 
 	;
-/*IN : OPP FLT IN { } 
+IN : OPP FLT IN { } 
 	| OPP id IN
 	|OPP TAB IN 
 	|OPP TABi IN
 	| OPP PAR IN
 	| 
-	;*/
+	;
 AFFACTATION : INST ';'  
-              	
-;/*
-BOUCLE : mc_wh PAR_o COND PAR_f '{' INSTR '}';
+;
+BOUCLE : mc_wh PAR_o B COND  PAR_f '{' INSTR '}' {b=0;printf("%dC\t\n",b);}
+; 
 
-*/
+B: {b=1;printf("%dB\t\n",b);}
+;
 INSTR : AFFACTATION INSTR
-       //|BOUCLE INSTR
-	   //|CONDITION INSTR
+       |BOUCLE INSTR {printf("WHILE\n");}
+	   |CONDITION INSTR
 	   |
 	   ;
-	   /*
+	   
 CON : et_l et_l COND
       |sp_2b COND
       |
@@ -369,18 +368,24 @@ COND : FLT CON
        |id sup egal id CON
        |id inf egal id CON
        |id inf egal FLT CON
-       |id egal egal id CON
-       |id egal egal FLT CON
+       |id egal egal id CON 
+       |id egal egal FLT CON {printf("%dA\n",b);if(b==0){quadr("BE",$1,tmp,"2");int p=qc;p--;sprintf(tmp,"%s%d","",qc);ajour_quad(p, 1 , tmp);}else{quadr("BNE",$1,tmp,"2");quadr("BR","","","");}}
        |id def egal id CON
        |id def egal FLT CON
        |def COND
        |PAR_o COND PAR_f CON
 ;
-CONDITION : mc_exe INSTR mc_if PAR_o COND PAR_f */
+/*CONDITION : mc_exe INSTR mc_if PAR_o COND PAR_f {quadr("BR","","","");}
+;*/
+CONDITION : mc_exe A INSTR  mc_if PAR_o COND PAR_f  
+;
+A: {quadr("BR","","","");}
+;
+			
 %%
 int yyerror(char*msg)
 {
-printf("Erreur syntaxique à la ligne %d\n", nbligne);
+printf("\nErreur syntaxique à la ligne %d\n", nbligne);
 return 1;}
 
 int main()
